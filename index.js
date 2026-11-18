@@ -1,6 +1,3 @@
-/* 1. Az új játék gombra kattintva legyen új játékterünk */
-/*ha a játékos a kő/papír/olló gombokra kattint akkor a megfelelő kép jelenjen meg*/ 
-
 const ujJatekGomb=document.getElementById("ujjatek");
 const jatekTer=document.getElementsByClassName("jatekter");
 
@@ -26,6 +23,7 @@ function megjelenit(){
         </div>
       </div>`
     jatekTer[0].innerHTML=""
+
     jatekTer[0].insertAdjacentHTML("beforeend", htmlKod)
     const gombElemek=document.querySelectorAll(".gombok button")
     gombElemek[0].addEventListener("click", kivalaszt)
@@ -33,9 +31,57 @@ function megjelenit(){
     gombElemek[2].addEventListener("click", kivalaszt)
 }
 
-function kivalaszt(){
+function kivalaszt(event){
     const kep=document.querySelector("#jatekos img")
-    console.log(kep)
+    console.log(event.target)
     console.log(event.target.id)
-    kep.src="kepek/ko.PNG"
+    kep.src=`kepek/${(event.target.id)}.PNG`
+    
+    // Itt átadjuk az event.target.id-t
+    gepValasztas(event.target.id)
+}
+
+// Itt fogadjuk jValasztasa néven (ami a te kommentedben is benne volt)
+function gepValasztas(jValasztasa){
+  /*meg kell fogni a gép képet*/
+  /*generaljunk egy veletlen szamot-veletlen szamnak */
+  const kep = document.querySelector("#gep img")
+  console.log(kep)
+  let veletlen=Math.floor(Math.random()*3)
+  console.log(veletlen)
+  if(veletlen==0){
+    kep.src= "kepek/ko.PNG"
+  }else if(veletlen==1){
+    kep.src= "kepek/ollo.PNG"
+  }else{
+    kep.src = "kepek/papir.PNG"
+  }
+  
+  // Itt pedig aktiváltuk a te eredeti függvényhívásodat
+  ellenorzes(veletlen, jValasztasa)
+}
+
+function ellenorzes(veletlen, jValasztasa){
+  /* össze kell hasonlítani a gép választását és a játékos választását
+  gép választása: veletlen
+  játékos választása: event.target.id*/
+  let f1=(jValasztasa=="ko" && veletlen==2)
+  let f2=(jValasztasa=="papir" && veletlen==0)
+  let f3=(jValasztasa=="ollo" && veletlen==1)
+
+  let f4=(jValasztasa=="ko" && veletlen==1)
+  let f5=(jValasztasa=="papir" && veletlen==2)
+  let f6=(jValasztasa=="ollo" && veletlen==0)
+
+  let szoveg =""
+  if(f1 || f2 || f3){
+    szoveg="Játékos nyert"
+  }else if(f4 || f5 || f6){
+    szoveg="Gép nyert"
+  }else{
+  szoveg="Döntetlen"
+  }
+
+  const kiirElem=document.getElementById("gyoztes")
+  kiirElem.innerHTML=`<p>${szoveg}</p>`
 }
